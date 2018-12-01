@@ -3,3 +3,8 @@
 *.jl.mem
 docs/build
 docs/site
+
+deps/clangsrc
+deps/juliasrc
+deps/llvmsrc
+build.log
