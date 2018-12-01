@@ -126,7 +126,7 @@ endif
 
 ifneq (,$(wildcard $(BASE_JULIA_BIN)/../lib/libjulia.$(SHLIB_EXT)))
 usr/lib/libcxxffi.$(SHLIB_EXT): build/bootstrap.o $(LIB_DEPENDENCY) | usr/lib
-	@$(call PRINT_LINK, $(CXX) -shared -fPIC $(JULIA_LDFLAGS) -ljulia $(LDFLAGS) -o $@ $(WHOLE_ARCHIVE) $(LINKED_LIBS) $(NO_WHOLE_ARCHIVE) $< )
+	@$(call PRINT_LINK, $(CXX) -shared -fPIC $(JULIA_LDFLAGS) -Lbuild/clang-6.0.0/lib -ljulia $(LDFLAGS) -o $@ $(WHOLE_ARCHIVE) $(LINKED_LIBS) $(NO_WHOLE_ARCHIVE) $< )
 else
 usr/lib/libcxxffi.$(SHLIB_EXT):
 	@echo "Not building release library because corresponding julia RELEASE library does not exist."
