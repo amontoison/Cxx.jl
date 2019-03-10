@@ -11,6 +11,8 @@ products = [
 download_info = Dict(
     Linux(:x86_64, libc=:glibc, compiler_abi=CompilerABI(:gcc7)) => ("https://github.com/Gnimuc/CxxBuilder/releases/download/v0.0.0-1/libcxxffi.v0.0.0.x86_64-linux-gnu-gcc7.tar.gz", "8dc796c0577973d09270b79b50a57b547938426951f8830fbec5270d35ffde8e"),
     MacOS(:x86_64, compiler_abi=CompilerABI(:gcc7)) => ("https://github.com/Gnimuc/CxxBuilder/releases/download/v0.0.0-2/libcxxffi.v0.0.0.x86_64-apple-darwin14-gcc7.tar.gz", "812b78869a318299e33d69fba738514521a139621f5a85633fbcbfd0b58fae6e"),
+    Windows(:x86_64, compiler_abi=CompilerABI(:gcc7)) => ("https://github.com/Gnimuc/CxxBuilder/releases/download/v0.0.0-3/libcxxffi.v0.0.0.x86_64-w64-mingw32-gcc7.tar.gz", "6376078764d629029039c2e988a2befb9af8eaab56deae49b10272d87130ac81"),
+    Linux(:i686, libc=:glibc, compiler_abi=CompilerABI(:gcc7)) => ("https://github.com/Gnimuc/CxxBuilder/releases/download/v0.0.0-4/libcxxffi.v0.0.0.i686-linux-gnu-gcc7.tar.gz", "a9896701a7dfd96f94541e45cf58506b9690f405c6d1a354f718089f34668786"),
 )
 
 # Install unsatisfied or updated dependencies:
