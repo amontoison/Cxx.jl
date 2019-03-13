@@ -28,8 +28,8 @@ init_libcxxffi()
 function setup_instance(PCHBuffer = []; makeCCompiler=false, target = C_NULL, CPU = C_NULL,
         useDefaultCxxABI=true, PCHTime = Base.Libc.TmStruct())
     x = Ref{ClangCompiler}()
-    # sysroot = @static isapple() ? strip(read(`xcrun --sdk macosx --show-sdk-path`, String)) : C_NULL
-    sysroot = @static isapple() ? strip(read(`xcodebuild -version -sdk macosx Path`, String)) : C_NULL
+    sysroot = @static isapple() ? strip(read(`xcrun --sdk macosx --show-sdk-path`, String)) : C_NULL
+    # sysroot = @static isapple() ? strip(read(`xcodebuild -version -sdk macosx Path`, String)) : C_NULL
     EmitPCH = true
     PCHPtr = C_NULL
     PCHSize = 0
@@ -219,11 +219,10 @@ nostdcxx = haskey(ENV,"CXXJL_NOSTDCXX")
 
 # On OS X, we just use the libc++ headers that ship with XCode
 @static if isapple() function collectStdHeaders!(headers)
-    # xcode_path = strip(read(`xcode-select --print-path`, String))
-    # occursin("Xcode.app", xcode_path) && (xcode_path *= "/Toolchains/XcodeDefault.xctoolchain")
-    # xcode_path *= "/"
+    xcode_path = strip(read(`xcode-select --print-path`, String))
+    occursin("Xcode.app", xcode_path) && joinpath(xcode_path, "Toolchains", "XcodeDefault.xctoolchain")
 
-    xcode_path = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/"
+    # xcode_path = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/"
 
     didfind = false
     for path in ("usr/lib/c++/v1/","usr/include/c++/v1")
