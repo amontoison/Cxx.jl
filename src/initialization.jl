@@ -225,12 +225,10 @@ nostdcxx = haskey(ENV,"CXXJL_NOSTDCXX")
     # xcode_path = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/"
 
     didfind = false
-    for path in ("usr/lib/c++/v1/","usr/include/c++/v1")
-        if isdir(joinpath(xcode_path,path))
-            push!(headers, (joinpath(xcode_path,path), C_ExternCSystem))
-            didfind = true
-        end
-    end
+    lib = joinpath(xcode_path, "usr", "lib", "c++", "v1")
+    inc = joinpath(xcode_path, "usr", "include", "c++", "v1")
+    isdir(lib) && (push!(headers, (lib, C_ExternCSystem)); didfind = true;)
+    isdir(inc) && (push!(headers, (inc, C_ExternCSystem)); didfind = true;)
     push!(headers,("/usr/include", C_System))
     didfind || error("Could not find C++ standard library. Is XCode installed?")
 end # function addStdHeaders(C)
