@@ -4,35 +4,35 @@ global varnum = 1
 
 const jns = cglobal((:julia_namespace,libcxxffi),Ptr{Cvoid})
 
-#
-# Takes a julia value and makes in into an llvm::Constant
-#
+"""
+    llvmconst(@nospecialize val)
+Takes a julia value and makes in into an llvm::Constant
+"""
 function llvmconst(@nospecialize val)
     T = typeof(val)
     if isbitstype(T)
         if !Base.isstructtype(T)
             if T <: AbstractFloat
-                return getConstantFloat(julia_to_llvm(T),Float64(val))
+                return getConstantFloat(julia_to_llvm(T), Float64(val))
             elseif T <: Integer
-                return getConstantInt(julia_to_llvm(T),UInt64(val))
+                return getConstantInt(julia_to_llvm(T), UInt64(val))
             elseif T <: Ptr || T <: CppPtr
-                return getConstantInt(julia_to_llvm(Ptr{Cvoid}),UInt(
-                    convert(Ptr{Cvoid}, val)))
+                return getConstantInt(julia_to_llvm(Ptr{Cvoid}), UInt64(convert(Ptr{Cvoid}, val)))
             else
                 error("Creating LLVM constants for type `$T` not implemented yet")
             end
         elseif sizeof(T) == 0
-            return getConstantStruct(getEmptyStructType(),pcpp"llvm::Constant"[])
+            return getConstantStruct(getEmptyStructType(), pcpp"llvm::Constant"[])
         else
             vals = [llvmconst(getfield(val,i)) for i = 1:length(fieldnames(T))]
-            return getConstantStruct(julia_to_llvm(T),vals)
+            return getConstantStruct(julia_to_llvm(T), vals)
         end
     end
     error("Cannot turn this julia value (of type `$T`) into a constant")
 end
 
-function SetDeclInitializer(C,decl::pcpp"clang::VarDecl",val::pcpp"llvm::Constant")
-    ccall((:SetDeclInitializer,libcxxffi),Cvoid,(Ref{ClangCompiler},Ptr{Cvoid},Ptr{Cvoid}),C,decl,val)
+function SetDeclInitializer(C, decl::pcpp"clang::VarDecl", val::pcpp"llvm::Constant")
+    ccall((:SetDeclInitializer,libcxxffi), Cvoid, (Ref{ClangCompiler},Ptr{Cvoid},Ptr{Cvoid}), C,decl,val)
 end
 
 const specTypes = 8
@@ -565,8 +565,7 @@ end
         end
     end
     x = ParseVirtual(C, typename,
-        VirtualFileName(string(loc.parameters[1])), loc.parameters[1],
-        loc.parameters[2], loc.parameters[3], true)
+        VirtualFileName(string(loc.parameters[1])), loc.parameters[1], loc.parameters[2], loc.parameters[3], true)
     if !iscc
         ExitParserScope(C)
         unsafe_store!(jns,C_NULL)

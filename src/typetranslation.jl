@@ -473,8 +473,7 @@ end
 
 extract_T(::Type{S}) where {T,S<:CppValue{T,N} where N} = T
 
-function juliatype(t::QualType, quoted = false, typeargs = Dict{Int,Cvoid}();
-        wrapvalue = true, valuecvr = true)
+function juliatype(t::QualType, quoted=false, typeargs=Dict{Int,Cvoid}(); wrapvalue=true, valuecvr=true)
     CVR = extractCVR(t)
     t = extractTypePtr(t)
     t = canonicalType(t)

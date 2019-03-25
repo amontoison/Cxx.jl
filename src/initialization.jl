@@ -143,11 +143,11 @@ function cxxparse(C, string, isTypeName = false, ParseAlias = false, DisableAC =
         ok || error("Could not parse string")
     end
 end
-cxxparse(C::CxxInstance,string) = cxxparse(instance(C),string)
-cxxparse(string) = cxxparse(__default_compiler__,string)
+cxxparse(C::CxxInstance, string) = cxxparse(instance(C), string)
+cxxparse(string) = cxxparse(__default_compiler__, string)
 
-function ParseVirtual(C,string, VirtualFileName, FileName, Line, Column, isTypeName = false, DisableAC = false)
-    EnterVirtualSource(C,string, VirtualFileName)
+function ParseVirtual(C, code, virtual_name, FileName, Line, Column, isTypeName=false, DisableAC=false)
+    EnterVirtualSource(C, code, virtual_name)
     old = DisableAC && set_access_control_enabled(C, false)
     if isTypeName
         ParseTypeName(C)
@@ -218,12 +218,12 @@ nostdcxx = haskey(ENV,"CXXJL_NOSTDCXX")
 
 # On OS X, we just use the libc++ headers that ship with XCode
 @static if isapple() function collectStdHeaders!(headers)
-    @static if get(ENV, "TRAVIS_OS_NAME", "") == "osx"
+    # @static if get(ENV, "TRAVIS_OS_NAME", "") == "osx"
         xcode_path = "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/"
-    else
-        xcode_path = strip(read(`xcode-select --print-path`, String))
-        occursin("Xcode.app", xcode_path) && joinpath(xcode_path, "Toolchains", "XcodeDefault.xctoolchain")
-    end
+    # else
+        # xcode_path = strip(read(`xcode-select --print-path`, String))
+        # occursin("Xcode.app", xcode_path) && joinpath(xcode_path, "Toolchains", "XcodeDefault.xctoolchain")
+    # end
     didfind = false
     lib = joinpath(xcode_path, "usr", "lib", "c++", "v1")
     inc = joinpath(xcode_path, "usr", "include", "c++", "v1")
