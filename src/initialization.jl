@@ -99,20 +99,13 @@ cxxinclude(fname; isAngled = false) = cxxinclude(__default_compiler__, fname; is
 # be differences in behavior when compared to regular source files. In
 # particular, there is no way to specify what directory contains an anonymous
 # buffer and hence relative includes do not work.
-function EnterBuffer(C,buf)
-    ccall((:EnterSourceFile,libcxxffi),Cvoid,
-        (Ref{ClangCompiler},Ptr{UInt8},Csize_t),C,buf,sizeof(buf))
-end
+EnterBuffer(C, code::AbstractString) = ccall((:EnterSourceFile, libcxxffi), Cvoid, (Ref{ClangCompiler}, Cstring), C, code)
 
 # Enter's the buffer, while pretending it's the contents of the file at path
-# `file`. Note that if `file` actually exists and is included from somewhere
-# else, `buf` will be included instead.
-function EnterVirtualSource(C,buf,file::String)
-    ccall((:EnterVirtualFile,libcxxffi),Cvoid,
-        (Ref{ClangCompiler},Ptr{UInt8},Csize_t,Ptr{UInt8},Csize_t),
-        C,buf,sizeof(buf),file,sizeof(file))
-end
-EnterVirtualSource(C,buf,file::Symbol) = EnterVirtualSource(C,buf,string(file))
+# `virtual_path`. Note that if `file` actually exists and is included from somewhere
+# else, `code` will be included instead.
+EnterVirtualSource(C, code::AbstractString, virtual_path::AbstractString) = ccall((:EnterVirtualFile,libcxxffi), Cvoid, (Ref{ClangCompiler}, Cstring, Cstring), C, code, virtual_path)
+EnterVirtualSource(C, code, virtual_path::Symbol) = EnterVirtualSource(C, code, string(virtual_path))
 
 # Parses everything until the end of the currently entered source file
 # Returns true if the file was successfully parsed (i.e. no error occurred)
